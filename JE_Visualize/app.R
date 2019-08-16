@@ -199,6 +199,7 @@ Sort_day_study <- function(vector_date){
     return(result)
 }
 
+##### The following part is not neccessary #####
 # Create_Region_IR <- function(dt.burden, df.vaccine, df.unvaccine, region, agegroup, listtime){
 #     # Create dataframe of incidence rate = new cases / total pop * 100000 (per 100000 people) based on agegroup
 #     # dt.burden is cases generate 'list'
@@ -257,6 +258,7 @@ Sort_day_study <- function(vector_date){
 #     
 #     return(region_burden)
 # }
+##### End of useless part #####
 
 Create_Region_Burden_All <- function(cv, cuv, dv, duv, pv, puv, region, agegroup, listtime){
     # Create burden (cases, deaths) dataframe of the selected region, selected agegroup, in entire listtime, and in 2 scenarios: vaccination, without vaccination
@@ -449,10 +451,10 @@ rm(order.idx)
 flag <- 0
 
 # ----- Preprocess Tab 3 -----
-Cases.Vaccine <- readRDS('Data/vac_cases_agegroup.rds')
-Cases.Unvaccine <- readRDS('Data/no_vac_cases_agegroup.rds')
-Deaths.Vaccine <- readRDS('Data/vac_deaths_agegroup.rds')
-Deaths.Unvaccine <- readRDS('Data/no_vac_deaths_agegroup.rds')
+Cases.Vaccine <- readRDS('Data/vac_cases_agegroup.rds') # Cases in the Vaccination scenario
+Cases.Unvaccine <- readRDS('Data/no_vac_cases_agegroup.rds') # Cases in the Non-Vaccination scenario
+Deaths.Vaccine <- readRDS('Data/vac_deaths_agegroup.rds') # Deaths in the Vaccination scenario
+Deaths.Unvaccine <- readRDS('Data/no_vac_deaths_agegroup.rds') # Deaths in the Non-Vaccination scenario
 
 
 # ----- Preprocess Tab 4 -----
@@ -1511,7 +1513,7 @@ server <- function(input, output, session){
             if (scenario == 1){ # vaccine scenario
                 idx <- seq(idx.year, length(unlist(tab4.burdenmap$value.vaccine)), 66) # selected year --- 66 is total length of pop.time
                 labels <- paste('Region:', tab4.burdenmap$Country, "<br/>Burden:", 
-                                round(unlist(tab4.burdenmap$value.vaccine)[idx], 3)) # label for burden value
+                                round(unlist(tab4.burdenmap$value.vaccine)[idx])) # label for burden value
                 tab4.mapproxy <- tab4.mapproxy %>% 
                     addPolygons(
                         fillColor = ~pal.burden(unlist(tab4.burdenmap$value.vaccine)[idx]), weight = 1, opacity = 1, color = "black", 
@@ -1524,7 +1526,7 @@ server <- function(input, output, session){
             }else{ # unvaccine scenario
                 idx <- seq(idx.year, length(unlist(tab4.burdenmap$value.unvaccine)), 66) # selected year --- 66 is total length of pop.time
                 labels <- paste('Region:', tab4.burdenmap$Country, "<br/>Burden:", 
-                                round(unlist(tab4.burdenmap$value.unvaccine)[idx], 3)) # label for burden value
+                                round(unlist(tab4.burdenmap$value.unvaccine)[idx])) # label for burden value
                 tab4.mapproxy <- tab4.mapproxy %>%
                     addPolygons(
                         fillColor = ~pal.burden(unlist(tab4.burdenmap$value.unvaccine)[idx]), weight = 1, opacity = 1, color = "black", 
@@ -1546,8 +1548,8 @@ server <- function(input, output, session){
         pop.time <- tab2.getPop.Time()
         idx.year <- which(pop.time %in% input$tab4_year)
         idx <- seq(idx.year, length(unlist(tab4.burdenmap$value.vaccine)), 66) # selected year --- 66 is total length of pop.time
-        value.vaccine <- round(unlist(tab4.burdenmap$value.vaccine)[idx], 3)
-        value.unvaccine <- round(unlist(tab4.burdenmap$value.unvaccine)[idx], 3)
+        value.vaccine <- round(unlist(tab4.burdenmap$value.vaccine)[idx])
+        value.unvaccine <- round(unlist(tab4.burdenmap$value.unvaccine)[idx])
         country <- as.character(tab4.burdenmap$Country)
         databurden <- data.frame(Region = country, Vaccine = value.vaccine, Unvaccine = value.unvaccine)
         rm(value.vaccine, value.unvaccine, country)
