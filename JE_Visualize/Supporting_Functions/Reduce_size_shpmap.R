@@ -82,12 +82,15 @@ shpmap$FOI_dist <- NULL
 shpmap$subnation <- NULL
 
 # ===== lambda =====
-lambda <- readRDS(paste0(DataPath ,'lambda_every_catchment_areas.rds'))
-lambda$THA[[2]]$data_for_map$catchment_areas[[1]] <- 'BK_Metro'
+# Only change the name of a region --> 1 region's name in the original data is not correct
+# Since I have already changed --> This part is useless now
+
+# lambda <- readRDS(paste0(DataPath ,'lambda_every_catchment_areas.rds'))
+# lambda$THA[[2]]$data_for_map$catchment_areas[[1]] <- 'BK_Metro'
 
 saveRDS(shpmap, 'shapefiles_FOI_data_merged_region.rds')
 saveRDS(Marker.Data, 'marker_data.rds')
-saveRDS(lambda, 'lambda_every_catchment_areas.rds')
+# saveRDS(lambda, 'lambda_every_catchment_areas.rds')
 
 
 # ===== Create Pop_Total and Pop_UnVaccine.Rds =====
