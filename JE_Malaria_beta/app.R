@@ -50,6 +50,7 @@ name <- c('Dak Lak', 'Dak Nong', 'Khanh Hoa', 'Ninh Thuan', 'Gia Lai', 'Quang Tr
 # color <- brewer.pal(n = length(code), name = "Paired")
 color <- c('#0f9d58', '#683ab7', '#0288d1', '#ffd600', '#ff5252', '#0097a7', '#c2185b', '#f57c00', '#795548', '#757575', '#e65100')
 Location_Code_Color <- data.frame(Code = code, Name = name, Color = color)
+location_legend_title <- 'Locations'
 
 # Size of geography legend (size of legend panel of geography color option)
 # The default 117, 175 is suitable for 7 distinct locations
@@ -57,6 +58,7 @@ Location_Code_Color <- data.frame(Code = code, Name = name, Color = color)
 # If name of location is long --> increase the width_geography
 width_geography <- 117
 height_geography <- 175
+piechart_legend_title <- 'Title'
 
 # ========== SHOULD NOT TOUCH THESE CODE BELOW ==========
 colnames(data) <- c('Location', 'Latitude', 'Longitude', 'Total_Sample', 'Predicted_Failure') # Rename column to read easily
@@ -111,7 +113,7 @@ Location_Code_Color_data <- data.frame(Code = code_data, Name = name_data, Color
 Location_Code_Color_data$Name <- factor(Location_Code_Color_data$Name, levels = name_data)
 Location_Code_Color_data$Color <- factor(Location_Code_Color_data$Color, levels = color_data)
 geographyplot <- ggplot(Location_Code_Color_data, aes(Name, fill = Name)) + geom_bar() + 
-    scale_fill_manual("Locations", values = levels(Location_Code_Color_data$Color)) + 
+    scale_fill_manual(location_legend_title, values = levels(Location_Code_Color_data$Color)) + 
     theme(
         legend.background = element_rect(colour = "transparent"),
         legend.key.size = unit(0.75, "cm")
@@ -122,7 +124,7 @@ location_legend <- get_legend(geographyplot)
 Piechart_Code_Color$Element <- factor(Piechart_Code_Color$Element, levels = elements_piechart)
 Piechart_Code_Color$Color <- factor(Piechart_Code_Color$Color, levels = colors_piechart)
 pieplot <- ggplot(Piechart_Code_Color, aes(Element, fill = Element)) + geom_bar() + 
-    scale_fill_manual(values = levels(Piechart_Code_Color$Color)) + 
+    scale_fill_manual(piechart_legend_title, values = levels(Piechart_Code_Color$Color)) + 
     theme(
         legend.background = element_rect(colour = "transparent"),
         legend.key.size = unit(0.75, "cm")
