@@ -219,49 +219,10 @@ ui <- fluidPage(
                 # ----- Leaflet output for displaying map -----
                 leafletOutput(outputId = 'map', height = 845),
                 
-                # ===== Displaying Scalebar =====
-                absolutePanel(
-                    id = "scalebar", class = "panel panel-default", fixed = TRUE, draggable = FALSE, 
-                    left = "auto", right = '2%', bottom = '5%',
-                    width = 275, height = 120,
-                    h4('Sample Scale Bar'),
-                    fluidRow(
-                        column(
-                            1,
-                            h5('0')
-                        ),
-                        column(
-                            2,
-                            offset = 0,
-                            uiOutput(outputId = 'sb_1')
-                        ),
-                        column(
-                            2,
-                            offset = 0,
-                            uiOutput(outputId = 'sb_2')
-                        ),
-                        column(
-                            2,
-                            offset = 0,
-                            uiOutput(outputId = 'sb_3')
-                        ),
-                        column(
-                            2,
-                            offset = 0,
-                            uiOutput(outputId = 'sb_4')
-                        ),
-                        column(
-                            2,
-                            offset = 0,
-                            uiOutput(outputId = 'sb_5')
-                        )
-                    ),
-                    img(src='scalebar.jpg', width = '100%')
-                ),
-                
                 # ----- Conditional Panel for displaying Geography if chosen with Geography Color -----
                 conditionalPanel(
                     condition = "input.choose_pie_or_not == 2",
+                    
                     # # ----- Panel for displaying own legend -----
                     absolutePanel(id = 'mylegend', class = "panel panel-default", fixed = TRUE, draggable = FALSE,
                                   right = '2%', width = width_geography,
@@ -272,6 +233,47 @@ ui <- fluidPage(
                 # ----- Conditional Panel for displaying Pie chart legend if chosen with Pie Chart -----
                 conditionalPanel(
                     condition = "input.choose_pie_or_not == 1",
+                    
+                    # ===== Displaying Scalebar =====
+                    absolutePanel(
+                        id = "scalebar", class = "panel panel-default", fixed = TRUE, draggable = FALSE, 
+                        left = "auto", right = '2%', bottom = '5%',
+                        width = 275, height = 120,
+                        h4('Sample Scale Bar'),
+                        fluidRow(
+                            column(
+                                1,
+                                h5('0')
+                            ),
+                            column(
+                                2,
+                                offset = 0,
+                                uiOutput(outputId = 'sb_1')
+                            ),
+                            column(
+                                2,
+                                offset = 0,
+                                uiOutput(outputId = 'sb_2')
+                            ),
+                            column(
+                                2,
+                                offset = 0,
+                                uiOutput(outputId = 'sb_3')
+                            ),
+                            column(
+                                2,
+                                offset = 0,
+                                uiOutput(outputId = 'sb_4')
+                            ),
+                            column(
+                                2,
+                                offset = 0,
+                                uiOutput(outputId = 'sb_5')
+                            )
+                        ),
+                        img(src='scalebar.jpg', width = '100%')
+                    ),
+                    
                     # # ----- Panel for displaying own legend -----
                     absolutePanel(id = 'mylegend_pie', class = "panel panel-default", fixed = TRUE, draggable = FALSE,
                                   right = '2%', width = 125,
@@ -370,7 +372,7 @@ server <- function(input, output, session){
                     weight = 1, color = "#000000",
                     fillColor = data.big$Color, 
                     fillOpacity = 0.75, 
-                    label = lapply(paste0("<b>",as.character(data.big$Predicted_Failure), '%</b>'), HTML),
+                    label = lapply(paste0("<b>",as.character(data.big$Total_Sample), '</b>'), HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE, textsize = '12px')
                 ) %>%
                 addCircleMarkers(
@@ -379,7 +381,7 @@ server <- function(input, output, session){
                     weight = 1, color = "#000000",
                     fillColor = data.small$Color, 
                     fillOpacity = 0.75, 
-                    label = lapply(paste0("<b>",as.character(data.small$Predicted_Failure), '%</b>'), HTML),
+                    label = lapply(paste0("<b>",as.character(data.small$Total_Sample), '</b>'), HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'top', textOnly = TRUE,
                                                 offset=c(0,4),
                                                 style = list(
