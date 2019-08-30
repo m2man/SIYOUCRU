@@ -1,7 +1,6 @@
 # Note
-# Mapping predicted treatment failure with and without including Sample size
-
-rm(list=ls())
+# Mapping malaria research sites colorized by their geography characteristics
+# Also support piechart
 
 ## ----- INCLUDE LIBRARIES -----
 library(shiny)
@@ -37,15 +36,10 @@ thresh <- 10
 # par1 is the parameter in the slider bar appearing on the user interface (UI), par2 is manually set here (default is 0)
 par2 <- 0
 
-# Color Palette for plotting treatment failure ("RdYlGn" is one of various pallete themes)
-# Can find more pallete here: https://www.r-graph-gallery.com/38-rcolorbrewers-palettes/
-# "rev" is used to reverse the color pallete (default of RdYlGn is Red < Yellow < Green). 
-# But is our case, Green is lowest, and Red is highest --> have to use "rev" function
-palette <- rev(brewer.pal(11, "RdYlGn"))
-
 # Color for piechart (Failure - Success)
-elements_piechart <- c('Failure', 'Success')
-colors_piechart <- c("#d96a6a", "#4fc13c")
+# The order of color will match with the column
+elements_piechart <- c('Failure', 'Success') # What will be displayed on the legend
+colors_piechart <- c("#d96a6a", "#4fc13c") # Color of each element
 Piechart_Code_Color <- data.frame(Element = elements_piechart, Color = colors_piechart)
 
 
@@ -56,6 +50,13 @@ name <- c('Dak Lak', 'Dak Nong', 'Khanh Hoa', 'Ninh Thuan', 'Gia Lai', 'Quang Tr
 # color <- brewer.pal(n = length(code), name = "Paired")
 color <- c('#0f9d58', '#683ab7', '#0288d1', '#ffd600', '#ff5252', '#0097a7', '#c2185b', '#f57c00', '#795548', '#757575', '#e65100')
 Location_Code_Color <- data.frame(Code = code, Name = name, Color = color)
+
+# Size of geography legend (size of legend panel of geography color option)
+# The default 117, 175 is suitable for 7 distinct locations
+# If there are more locations --> increase the height_geography 
+# If name of location is long --> increase the width_geography
+width_geography <- 117
+height_geography <- 175
 
 # ========== SHOULD NOT TOUCH THESE CODE BELOW ==========
 colnames(data) <- c('Location', 'Latitude', 'Longitude', 'Total_Sample', 'Predicted_Failure') # Rename column to read easily
@@ -98,6 +99,8 @@ content_popup <- paste0("<p style = \"font-size: 13px\">",
 )
 
 # ----- Legends Code and JS Code for exporting to PDF (DO NOT TOUCH) -----
+# Legend code is used for displaying legend seperately (not the supported legend)
+# The original supported legend will lost the color when exporting to PDF --> dont know why ???
 # Check which locations appearing in the data, then plot the legend separately
 idx_code_data <- which(code %in% data$Numeric_Code)
 code_data <- code[idx_code_data]
@@ -259,8 +262,8 @@ ui <- fluidPage(
                     condition = "input.choose_pie_or_not == 2",
                     # # ----- Panel for displaying own legend -----
                     absolutePanel(id = 'mylegend', class = "panel panel-default", fixed = TRUE, draggable = FALSE,
-                                  right = '2%', width = 117,
-                                  top = '8%', height = 175,
+                                  right = '2%', width = width_geography,
+                                  top = '8%', height = height_geography,
                                   plotOutput(outputId = 'legend', height = '100%'))
                 ),
                 
@@ -353,7 +356,7 @@ server <- function(input, output, session){
                     type = "pie",
                     chartdata = data[, c("Predicted_Failure", "Predicted_Success")], 
                     colorPalette = colors_piechart, 
-                    width = par1() * sqrt(data$Total_Sample / min(data$Total_Sample)) + par2, 
+                    width = par1() * sqrt(data$Total_Sample / min(data$Total_Sample)) + par2, # The width of the piechart marker
                     transitionTime = 0.2,
                     legend = FALSE # DONT DISPLAY DEFAULT LEGEND SINCE IT WILL LOST THE COLOR WHEN EXPORTING PDF
                 )
